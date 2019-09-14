@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>angularJS入门--表达式</title>
+    <script type="text/javascript" src="plugins/angularjs/angular.min.js"></script>
+    <script type="text/javascript">
+        //定义控制器方法
+        function helloController($scope) {
+            $scope.text="ddddddddddd";
+        }
+    </script>
+</head>
+<body ng-app>
+    <div ng-controller="helloController">
+        <h1>{{text}}</h1>
+    </div>
+</body>
+</html>
