@@ -19,7 +19,7 @@ import com.pyg.utils.PygResult;
 @RequestMapping("/itemCat")
 public class ItemCatController {
 
-	@Reference
+	@Reference(timeout = 100000000)
 	private ItemCatService itemCatService;
 	
 	/**

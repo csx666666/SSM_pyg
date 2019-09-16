@@ -1,6 +1,7 @@
 package com.pyg.manager.controller;
 import java.util.List;
 
+import com.pyg.vo.Specification;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,7 +20,7 @@ import com.pyg.utils.PygResult;
 @RequestMapping("/specification")
 public class SpecificationController {
 
-	@Reference
+	@Reference(timeout = 100000000)
 	private SpecificationService specificationService;
 	
 	/**
@@ -47,7 +48,7 @@ public class SpecificationController {
 	 * @return
 	 */
 	@RequestMapping("/add")
-	public PygResult add(@RequestBody TbSpecification specification){
+	public PygResult add(@RequestBody Specification specification){
 		try {
 			specificationService.add(specification);
 			return new PygResult(true, "增加成功");
@@ -63,7 +64,7 @@ public class SpecificationController {
 	 * @return
 	 */
 	@RequestMapping("/update")
-	public PygResult update(@RequestBody TbSpecification specification){
+	public PygResult update(@RequestBody Specification specification){
 		try {
 			specificationService.update(specification);
 			return new PygResult(true, "修改成功");

@@ -3,6 +3,8 @@ import java.util.List;
 import com.pyg.pojo.TbSpecification;
 
 import com.pyg.utils.PageResult;
+import com.pyg.vo.Specification;
+
 /**
  * 服务层接口
  * @author Administrator
@@ -27,13 +29,13 @@ public interface SpecificationService {
 	/**
 	 * 增加
 	*/
-	public void add(TbSpecification specification);
+	public void add(Specification specification);
 	
 	
 	/**
 	 * 修改
 	 */
-	public void update(TbSpecification specification);
+	public void update(Specification specification);
 	
 
 	/**

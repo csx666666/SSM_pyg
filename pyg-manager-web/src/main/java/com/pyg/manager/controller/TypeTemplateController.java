@@ -19,7 +19,7 @@ import com.pyg.utils.PygResult;
 @RequestMapping("/typeTemplate")
 public class TypeTemplateController {
 
-	@Reference
+	@Reference(timeout = 100000000)
 	private TypeTemplateService typeTemplateService;
 	
 	/**

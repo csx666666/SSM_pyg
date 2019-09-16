@@ -19,7 +19,7 @@ import com.pyg.utils.PygResult;
 @RequestMapping("/goodsDesc")
 public class GoodsDescController {
 
-	@Reference
+	@Reference(timeout = 100000000)
 	private GoodsDescService goodsDescService;
 	
 	/**
