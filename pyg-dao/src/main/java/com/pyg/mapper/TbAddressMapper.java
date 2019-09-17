@@ -3,6 +3,8 @@ package com.pyg.mapper;
 import com.pyg.pojo.TbAddress;
 import com.pyg.pojo.TbAddressExample;
 import java.util.List;
+import java.util.Map;
+
 import org.apache.ibatis.annotations.Param;
 
 public interface TbAddressMapper {
@@ -27,4 +29,5 @@ public interface TbAddressMapper {
     int updateByPrimaryKeySelective(TbAddress record);
 
     int updateByPrimaryKey(TbAddress record);
+
 }

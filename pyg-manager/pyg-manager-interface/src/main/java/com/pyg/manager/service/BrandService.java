@@ -5,6 +5,7 @@ import com.pyg.utils.PageResult;
 import com.pyg.utils.PygResult;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author DingZhenYun
@@ -54,4 +55,10 @@ public interface BrandService {
      * 返回值:PygResult
      */
     public PygResult deleteIds(Long[] ids);
+    /**
+     * 需求:查询所有品牌
+     * 参数:无
+     * 返回值:List<Map>
+     */
+    public List<Map> findBrandWithTemplate();
 }

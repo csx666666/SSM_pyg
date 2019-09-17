@@ -1,8 +1,10 @@
 package com.pyg.manager.service.impl;
 import java.util.List;
+import java.util.Map;
 
 import com.pyg.mapper.TbSpecificationOptionMapper;
 import com.pyg.pojo.TbSpecificationOption;
+import com.pyg.pojo.TbSpecificationOptionExample;
 import com.pyg.vo.Specification;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.alibaba.dubbo.config.annotation.Service;
@@ -73,17 +75,67 @@ public class SpecificationServiceImpl implements SpecificationService {
 	 */
 	@Override
 	public void update(Specification specification){
+		// 保存规格
+		// 获取规格对象
+		TbSpecification tbSpecification=specification.getTbSpecification();
+		// 更新规格
+		specificationMapper.updateByPrimaryKeySelective(tbSpecification);
 
-	}	
-	
+
+		// 更新规格选项数据
+		// 获取规格选项对象
+		List<TbSpecificationOption> list = specification.getSpecificationList();
+		// 根据外键查询
+		// 创建example对象
+		TbSpecificationOptionExample example = new TbSpecificationOptionExample();
+		// 创建criteria对象
+		com.pyg.pojo.TbSpecificationOptionExample.Criteria createCriteria = example
+				.createCriteria();
+		// 设置查询参数
+		createCriteria.andSpecIdEqualTo(tbSpecification.getId());
+		// 执行删除操作
+		specificationOptionMapper.deleteByExample(example);
+		// 循环规格选项集合
+		for (TbSpecificationOption tb:list) {
+			//设置外键
+			tb.setSpecId(tbSpecification.getId());
+			specificationOptionMapper.insertSelective(tb);
+		}
+
+
+	}
+
 	/**
 	 * 根据ID获取实体
 	 * @param id
 	 * @return
 	 */
 	@Override
-	public TbSpecification findOne(Long id){
-		return specificationMapper.selectByPrimaryKey(id);
+	public Specification findOne(Long id){
+		// 创建一个结果集包装类对象
+		Specification specification = new Specification();
+		// 查询规格数据
+		TbSpecification tbSpecification = specificationMapper
+				.selectByPrimaryKey(id);
+		// 设置规格对象
+		specification.setTbSpecification(tbSpecification);
+
+		// 查询规格选项
+		// 根据外键查询
+		// 创建example对象
+		TbSpecificationOptionExample example = new TbSpecificationOptionExample();
+		// 创建criteria对象
+		com.pyg.pojo.TbSpecificationOptionExample.Criteria createCriteria = example
+				.createCriteria();
+		// 设置查询参数
+		createCriteria.andSpecIdEqualTo(id);
+		// 执行查询
+		List<TbSpecificationOption> list = specificationOptionMapper
+				.selectByExample(example);
+		// 把结果集合添加到包装对象
+		specification.setSpecificationList(list);
+
+		return specification;
 	}
 
 	/**
@@ -93,6 +145,15 @@ public class SpecificationServiceImpl implements SpecificationService {
 	public void delete(Long[] ids) {
 		for(Long id:ids){
 			specificationMapper.deleteByPrimaryKey(id);
+			// 创建example对象
+			TbSpecificationOptionExample example = new TbSpecificationOptionExample();
+			// 创建criteria对象
+			com.pyg.pojo.TbSpecificationOptionExample.Criteria createCriteria = example
+					.createCriteria();
+			// 设置查询参数
+			createCriteria.andSpecIdEqualTo(id);
+			//根据外键删除
+			specificationOptionMapper.deleteByExample(example);
 		}		
 	}
 	
@@ -114,5 +175,11 @@ public class SpecificationServiceImpl implements SpecificationService {
 		Page<TbSpecification> page= (Page<TbSpecification>)specificationMapper.selectByExample(example);		
 		return new PageResult(page.getTotal(), page.getResult());
 	}
-	
+
+	@Override
+	public List<Map> findSpecOptionList() {
+		List<Map> list = specificationMapper.findSpecOptionList();
+		return list;
+	}
+
 }

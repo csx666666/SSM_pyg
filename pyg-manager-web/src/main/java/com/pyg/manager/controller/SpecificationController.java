@@ -4,6 +4,7 @@ import java.util.List;
 import com.pyg.vo.Specification;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.pyg.pojo.TbSpecification;
@@ -80,8 +81,9 @@ public class SpecificationController {
 	 * @return
 	 */
 	@RequestMapping("/findOne")
-	public TbSpecification findOne(Long id){
-		return specificationService.findOne(id);		
+	public Specification findOne(Long id){
+
+		return specificationService.findOne(id);
 	}
 	
 	/**
@@ -108,7 +110,9 @@ public class SpecificationController {
 	 * @return
 	 */
 	@RequestMapping("/search")
-	public PageResult search(@RequestBody TbSpecification specification, int page, int rows  ){
+	public PageResult search(@RequestBody TbSpecification specification,
+							 @RequestParam(defaultValue = "1")Integer page,
+							 @RequestParam(defaultValue = "10") Integer rows ){
 		return specificationService.findPage(specification, page, rows);		
 	}
 	

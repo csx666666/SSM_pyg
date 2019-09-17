@@ -1,5 +1,5 @@
  //控制层 
-app.controller('typeTemplateController' ,function($scope,$controller   ,typeTemplateService){	
+app.controller('typeTemplateController' ,function($scope,$controller,typeTemplateService){
 	
 	$controller('baseController',{$scope:$scope});//继承
 	
@@ -26,7 +26,13 @@ app.controller('typeTemplateController' ,function($scope,$controller   ,typeTemp
 	$scope.findOne=function(id){				
 		typeTemplateService.findOne(id).success(
 			function(response){
-				$scope.entity= response;					
+				$scope.entity= response;
+				//规格属性.把规格字符串转换层json对象
+				$scope.entity.specIds = JSON.parse($scope.entity.specIds);
+				//品牌数据
+				$scope.entity.brandIds = JSON.parse($scope.entity.brandIds);
+				//扩展属性
+				$scope.entity.customAttributeItems = JSON.parse($scope.entity.customAttributeItems);
 			}
 		);				
 	}
@@ -76,5 +82,36 @@ app.controller('typeTemplateController' ,function($scope,$controller   ,typeTemp
 			}			
 		);
 	}
-    
+	//查询规格属性下拉列表
+	$scope.findBrandList=function () {
+		typeTemplateService.findBrandList().success(
+			function (data1) {
+				// 下拉框数据封装
+				$scope.brandList={
+					data:data1
+				};
+			}
+		);
+	};
+	$scope.brandList = {data:[]};
+	$scope.specList = {data:[]};
+	// 查询规格属性下拉列表
+	$scope.findSpecOptionList=function () {
+		typeTemplateService.findSpecOptionList().success(
+			function (data1) {
+				// 下拉框数据封装
+				$scope.specList={
+					data : data1
+				};
+			}
+		);
+	};
+	//新增规格行
+	$scope.addTableRow = function(){
+		$scope.entity.customAttributeItems.push({});
+	}
+	//删除扩展属性行
+	$scope.deleTableRow = function(index){
+		$scope.entity.customAttributeItems.splice(index,1);
+	}
 });	
