@@ -74,11 +74,27 @@ public class ItemCatServiceImpl implements ItemCatService {
 	@Override
 	public void delete(Long[] ids) {
 		for(Long id:ids){
-			itemCatMapper.deleteByPrimaryKey(id);
-		}		
+			//查询所有父亲节点为的id的子节点--二
+			List<TbItemCat> tbItemCatsTwo = findItemCatByParentId(id);
+			if(tbItemCatsTwo!=null && tbItemCatsTwo.size()>0){
+				for (TbItemCat t: tbItemCatsTwo) {
+					List<TbItemCat> itemCatsThree = findItemCatByParentId(t.getId());
+					if(itemCatsThree!=null&&itemCatsThree.size()>0){
+						for (TbItemCat t2:itemCatsThree) {
+							itemCatMapper.deleteByPrimaryKey(t2.getId());
+						}
+					}
+					//只到第二层
+					deleteItemCatByParentId(t.getId());
+
+				}
+			}
+				//删除自己的id
+				itemCatMapper.deleteByPrimaryKey(id);
+        }
 	}
-	
-	
+
+
 		@Override
 	public PageResult findPage(TbItemCat itemCat, int pageNum, int pageSize) {
 		PageHelper.startPage(pageNum, pageSize);
@@ -96,5 +112,33 @@ public class ItemCatServiceImpl implements ItemCatService {
 		Page<TbItemCat> page= (Page<TbItemCat>)itemCatMapper.selectByExample(example);		
 		return new PageResult(page.getTotal(), page.getResult());
 	}
-	
+	/**
+	 * 需求:根据父id查询子节点
+	 * 参数:Long parentId
+	 * 返回值:List<tbItemCat>
+	 */
+	@Override
+	public List<TbItemCat> findItemCatByParentId(Long parentId) {
+		TbItemCatExample example=new TbItemCatExample();
+		Criteria criteria = example.createCriteria();
+		// 设置查询参数 根据父id查询子节点
+		criteria.andParentIdEqualTo(parentId);
+		List<TbItemCat> list = itemCatMapper.selectByExample(example);
+		return list;
+	}
+
+	/**
+	 * 需求:根据父id删除子节点
+	 * 参数:Long parentId
+	 * 返回值：boolear
+	 */
+	public boolean deleteItemCatByParentId(Long parentId) {
+		TbItemCatExample example=new TbItemCatExample();
+		Criteria criteria = example.createCriteria();
+		// 设置查询参数 根据父id查询子节点
+		criteria.andParentIdEqualTo(parentId);
+		int i = itemCatMapper.deleteByExample(example);
+		return (i<=0)?false:true;
+	}
+
 }

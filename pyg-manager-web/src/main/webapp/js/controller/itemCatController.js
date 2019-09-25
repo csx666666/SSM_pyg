@@ -37,13 +37,16 @@ app.controller('itemCatController' ,function($scope,$controller   ,itemCatServic
 		if($scope.entity.id!=null){//如果有ID
 			serviceObject=itemCatService.update( $scope.entity ); //修改  
 		}else{
+
+			//给保存对象赋值
+			$scope.entity.parentId=$scope.parentId;
 			serviceObject=itemCatService.add( $scope.entity  );//增加 
 		}				
 		serviceObject.success(
 			function(response){
 				if(response.success){
-					//重新查询 
-		        	$scope.reloadList();//重新加载
+					//调用查询下级方法
+					$scope.findItemCatByParentId($scope.parentId);
 				}else{
 					alert(response.message);
 				}
@@ -58,9 +61,12 @@ app.controller('itemCatController' ,function($scope,$controller   ,itemCatServic
 		itemCatService.dele( $scope.selectIds ).success(
 			function(response){
 				if(response.success){
-					$scope.reloadList();//刷新列表
+					alert("删除成功");
 					$scope.selectIds=[];
-				}						
+					$scope.findItemCatByParentId($scope.parentId);
+				}else{
+					alert("删除失败");
+				}
 			}		
 		);				
 	}
@@ -76,5 +82,46 @@ app.controller('itemCatController' ,function($scope,$controller   ,itemCatServic
 			}			
 		);
 	}
-    
+    //定义父节点id变量,记录父节点值
+    $scope.parentId = 0;
+	// 根据父id查询子节点
+	$scope.findItemCatByParentId=function (parentId) {
+		//查询下级节点给父节点赋值,记录每一次节点变化父节点
+		$scope.parentId=parentId;
+
+		itemCatService.findItemCatByParentId(parentId).success(
+
+			function (data) {
+				$scope.itemCatList=data;
+			});
+	}
+	// 定义标识,记录菜单节点级别
+	// 默认一级菜单
+	$scope.grade=1;
+
+	// 定义方法,级别加1操作
+	$scope.setGrade=function (value) {
+		$scope.grade=value;
+	}
+	// 根据父id查询子节点,记录每一级节点对象
+	$scope.selectCatList=function (p_entity) {
+		// 如果是第一级菜单
+		if($scope.grade==1){
+			$scope.entity_1=null;
+			$scope.entity_2=null;
+		}
+		// 如果是第二级菜单
+		if($scope.grade==2){
+			$scope.entity_1=p_entity;
+			$scope.entity_2=null;
+		}
+
+		// 如果是第三级菜单
+
+		if($scope.grade==3){
+			$scope.entity_2=p_entity;
+		}
+		//调用查询下级方法
+		$scope.findItemCatByParentId(p_entity.id);
+	}
 });	

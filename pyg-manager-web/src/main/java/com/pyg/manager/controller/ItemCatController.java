@@ -101,7 +101,7 @@ public class ItemCatController {
 	
 		/**
 	 * 查询+分页
-	 * @param brand
+	 * @param itemCat
 	 * @param page
 	 * @param rows
 	 * @return
@@ -109,6 +109,17 @@ public class ItemCatController {
 	@RequestMapping("/search")
 	public PageResult search(@RequestBody TbItemCat itemCat, int page, int rows  ){
 		return itemCatService.findPage(itemCat, page, rows);		
+	}
+	/**
+	 * 需求:根据父id查询子节点
+	 * 请求:/itemCat/findItemCatByParentId?parentId=
+	 * 参数:Long parentId
+	 * 返回值:List<tbItemCat>
+	 */
+	@RequestMapping("/findItemCatByParentId")
+	public List<TbItemCat> findItemCatByParentId(Long parentId){
+		List<TbItemCat> list = itemCatService.findItemCatByParentId(parentId);
+		return list;
 	}
 	
 }

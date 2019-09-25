@@ -3,6 +3,8 @@ import java.util.List;
 import com.pyg.pojo.TbSeller;
 
 import com.pyg.utils.PageResult;
+import com.pyg.utils.PygResult;
+
 /**
  * 服务层接口
  * @author Administrator
@@ -57,5 +59,10 @@ public interface SellerService {
 	 * @return
 	 */
 	public PageResult findPage(TbSeller seller, int pageNum,int pageSize);
-	
+	/**
+	 * 需求:审核商家信息,改变商品状态
+	 * 参数:String sellerId,String status
+	 * 返回值:pygResult
+	 */
+	public PygResult updateStatus(String sellerId, String status);
 }
